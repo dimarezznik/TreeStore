@@ -42,7 +42,16 @@ export class TreeStore<T extends TreeItem = TreeItem> {
     while (stack.length > 0) {
       const current = stack.pop() as T
       result.push(current)
-      pushChildren(current.id);
+      pushChildren(current.id)
+    }
+    return result
+  }
+  getAllParents(id: Id): T[] {
+    const result: T[] = []
+    let current: T | undefined = this.items.get(id)
+    while (current !== undefined) {
+      result.push(current)
+      current = current.parent === null ? undefined : this.items.get(current.parent)
     }
     return result
   }
