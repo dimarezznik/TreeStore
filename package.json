@@ -16,6 +16,8 @@
     "format": "prettier --write --experimental-cli src/"
   },
   "dependencies": {
+    "ag-grid-enterprise": "^36.2.0",
+    "ag-grid-vue3": "^36.2.0",
     "vue": "^3.5.42"
   },
   "devDependencies": {
