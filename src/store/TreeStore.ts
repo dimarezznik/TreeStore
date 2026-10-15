@@ -25,6 +25,25 @@ export class TreeStore<T extends TreeItem = TreeItem> {
   }
 
   getChildren(id: Id): T[] {
-    return [...(this.childrenIndex.get(id) ?? [])];
+    return [...(this.childrenIndex.get(id) ?? [])]
+  }
+
+  getAllChildren(id: Id): T[] {
+    const result: T[] = []
+    const stack: T[] = []
+    const pushChildren = (parentId: Id): void => {
+      const children = this.childrenIndex.get(parentId)
+      if (!children) return
+      for (let i = 0; i < children.length; i++) {
+        stack.push(children[i] as T)
+      }
+    }
+    pushChildren(id)
+    while (stack.length > 0) {
+      const current = stack.pop() as T
+      result.push(current)
+      pushChildren(current.id);
+    }
+    return result
   }
 }
