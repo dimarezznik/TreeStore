@@ -24,4 +24,16 @@ describe('TreeStore', () => {
       expect(new TreeStore().getAll()).toEqual([])
     })
   })
+  describe('getItem', () => {
+    it('находит элемент по id', () => {
+      const items = makeItems()
+      const store = new TreeStore(items)
+      expect(store.getItem(3)).toBe(items[2])
+      expect(store.getItem('91064cef')).toBe(items[1])
+    })
+
+    it('возвращает undefined для неизвестного id', () => {
+      expect(new TreeStore(makeItems()).getItem(999)).toBeUndefined()
+    })
+  })
 })
