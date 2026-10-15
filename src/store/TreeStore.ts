@@ -52,13 +52,24 @@ export class TreeStore<T extends TreeItem = TreeItem> {
     this.items.clear()
     this.childrenIndex.clear()
     for (const item of items) {
-      this.items.set(item.id, item)
-      const children = this.childrenIndex.get(item.parent)
-      if (children) {
-        children.push(item)
-      } else {
-        this.childrenIndex.set(item.parent, [item])
-      }
+      this.insert(item)
+    }
+  }
+
+  addItem(item: T) {
+    if (this.items.has(item.id)) {
+      throw new Error(`Элемент с id ${item.id} уже существует`)
+    }
+    this.insert(item)
+  }
+
+  private insert(item: T) {
+    this.items.set(item.id, item)
+    const children = this.childrenIndex.get(item.parent)
+    if (children) {
+      children.push(item)
+    } else {
+      this.childrenIndex.set(item.parent, [item])
     }
   }
 }
