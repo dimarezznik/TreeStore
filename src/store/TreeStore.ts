@@ -5,15 +5,7 @@ export class TreeStore<T extends TreeItem = TreeItem> {
   private readonly childrenIndex = new Map<Id | null, T[]>()
 
   constructor(items: readonly T[] = []) {
-    for (const item of items) {
-      this.items.set(item.id, item)
-      const children = this.childrenIndex.get(item.parent)
-      if (children) {
-        children.push(item)
-      } else {
-        this.childrenIndex.set(item.parent, [item])
-      }
-    }
+    this.setItems(items)
   }
 
   getAll(): T[] {
@@ -54,5 +46,19 @@ export class TreeStore<T extends TreeItem = TreeItem> {
       current = current.parent === null ? undefined : this.items.get(current.parent)
     }
     return result
+  }
+
+  setItems(items: readonly T[]) {
+    this.items.clear()
+    this.childrenIndex.clear()
+    for (const item of items) {
+      this.items.set(item.id, item)
+      const children = this.childrenIndex.get(item.parent)
+      if (children) {
+        children.push(item)
+      } else {
+        this.childrenIndex.set(item.parent, [item])
+      }
+    }
   }
 }
