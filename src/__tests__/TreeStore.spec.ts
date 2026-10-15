@@ -36,4 +36,18 @@ describe('TreeStore', () => {
       expect(new TreeStore(makeItems()).getItem(999)).toBeUndefined()
     })
   })
+  describe('getChildren', () => {
+    const ids = (list: TreeItem[]) => list.map((item) => item.id)
+
+    it('возвращает children', () => {
+      const store = new TreeStore(makeItems())
+      expect(ids(store.getChildren(1))).toEqual(['91064cef', 3])
+    })
+    it('для элемента без children возвращает []', () => {
+      expect(new TreeStore(makeItems()).getChildren(8)).toEqual([])
+    })
+    it('для неизвестного id возвращает []', () => {
+      expect(new TreeStore(makeItems()).getChildren(999)).toEqual([])
+    })
+  })
 })
