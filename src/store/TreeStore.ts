@@ -11,8 +11,12 @@ export class TreeStore<T extends TreeItem = TreeItem> {
   getAll(): T[] {
     return Array.from(this.items.values())
   }
-  getItem(id: Id): T | undefined {
-    return this.items.get(id)
+  getItem(id: Id): T {
+    const item = this.items.get(id)
+    if (!item) {
+      throw Error('Такого элемента не существует')
+    }
+    return item
   }
   getChildren(id: Id): T[] {
     return [...(this.childrenIndex.get(id) ?? [])]
@@ -69,6 +73,20 @@ export class TreeStore<T extends TreeItem = TreeItem> {
     }
     this.items.delete(item.id)
     this.childrenIndex.delete(item.id)
+  }
+  updateItem(item: T) {
+    const current: T = this.getItem(item.id)
+    if (current.parent !== item.parent) {
+      const oldRelatives = this.childrenIndex.get(current.parent)
+      oldRelatives?.delete(current)
+      const newRelatives = this.childrenIndex.get(item.parent)
+      if (newRelatives) {
+        newRelatives.add(item)
+      } else {
+        this.childrenIndex.set(item.parent, new Set([item]))
+      }
+    }
+    this.items.set(current.id, current)
   }
 
   private insert(item: T) {
