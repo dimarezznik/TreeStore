@@ -13,4 +13,8 @@ export class TreeStore<T extends TreeItem = TreeItem> {
   getAll(): T[] {
     return Array.from(this.items.values())
   }
+
+  getItem(id: Id): T | undefined {
+    return this.items.get(id)
+  }
 }
